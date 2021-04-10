@@ -1,0 +1,9 @@
+// 10-04-2021
+ALTER TABLE `users` CHANGE `role_id` `role_id` INT(11) NOT NULL COMMENT '1=super admin, -1=frontend user, 2=admin';
+ALTER TABLE `permisions` CHANGE `create` `creat` INT(11) NOT NULL DEFAULT '1', CHANGE `update` `edit` INT(11) NOT NULL DEFAULT '1', CHANGE `delete` `remove` INT(11) NOT NULL DEFAULT '0';
+
+create table 'admin_type'
+
+ALTER TABLE `users` CHANGE `role_id` `role_id` INT(11) NOT NULL COMMENT '-1=super admin, -2=frontend user, 1=admin';
+
+
