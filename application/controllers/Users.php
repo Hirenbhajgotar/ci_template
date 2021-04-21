@@ -3,19 +3,13 @@ class Users extends CI_Controller
 {
 	public function dashboard()
 	{
-		if (!$this->session->userdata('login')) {
+		if (!$this->session->userdata('vendor_login')) {
 			redirect('users/login');
 		}
 		$data['title'] = 'Dashboard';
-		// echo '<pre>';
-		// print_r($this->session->all_userdata());
-		// echo '</pre>';
-		// exit;
-		$data['user'] = $this->User_Model->get_user($this->session->userdata('user_id'));
-		// echo '<pre>';
-		// print_r($data);
-		// echo '</pre>';
-		// exit;
+		
+		$data['user'] = $this->User_Model->get_user($this->session->userdata('vendor_user_id'));
+		
 		$this->load->view('templates/head');
 		$this->load->view('users/dashboard', $data);
 		$this->load->view('templates/foot');
@@ -70,22 +64,22 @@ class Users extends CI_Controller
 			$encrypt_password = md5($this->input->post('password'));
 
 			$user_id = $this->User_Model->login($username, $encrypt_password);
-
+			
 			if ($user_id) {
 				//Create Session
 				$user_data = array(
-					'user_id'            => $user_id->id,
-					'username'           => $username,
-					'email'              => $user_id->email,
-					'user_role_id'       => $user_id->role_id,
-					'mobile'             => $user_id->contact,
-					'address'            => $user_id->address,
-					'gender'             => $user_id->gender,
-					'user_image'         => $user_id->image,
-					'zipcode'            => $user_id->zipcode,
-					'date_of_birth'      => $user_id->dob,
-					'user_register_date' => $user_id->register_date,
-					'login'              => true
+					'vendor_user_id'            => $user_id->id,
+					'vendor_username'           => $username,
+					'vendor_email'              => $user_id->email,
+					'vendor_user_role_id'       => $user_id->role_id,
+					'vendor_mobile'             => $user_id->contact,
+					'vendor_address'            => $user_id->address,
+					'vendor_gender'             => $user_id->gender,
+					'vendor_user_image'         => $user_id->image,
+					'vendor_zipcode'            => $user_id->zipcode,
+					'vendor_date_of_birth'      => $user_id->dob,
+					'vendor_user_register_date' => $user_id->register_date,
+					'vendor_login'              => true
 				);
 
 				$this->session->set_userdata($user_data);
@@ -104,9 +98,9 @@ class Users extends CI_Controller
 	public function logout()
 	{
 		// unset user data
-		$this->session->unset_userdata('login');
-		$this->session->unset_userdata('user_id');
-		$this->session->unset_userdata('username');
+		$this->session->unset_userdata('vendor_login');
+		$this->session->unset_userdata('vendor_user_id');
+		$this->session->unset_userdata('vendor_username');
 
 		//Set Message
 		$this->session->set_flashdata('user_loggedout', 'You are logged out.');

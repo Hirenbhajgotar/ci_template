@@ -48,7 +48,7 @@
         <div class="container d-flex align-items-center">
 
             <!-- <h1 class="logo mr-auto"><a href="<?php echo base_url(); ?>"><?= APP_NAME ?></a></h1> -->
-            <h1 class="logo mr-auto"><a href="<?php echo base_url(); ?>"> <img src="<?= base_url('assets/frontend/img/LOGO-405x116.png') ?>" alt="<?= APP_NAME ?>"></a></h1>
+            <h1 class="logo mr-auto"><a href="<?php echo base_url(); ?>"> <img src="<?= base_url('assets/frontend/img/logo.png') ?>" alt="<?= APP_NAME ?>"></a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html" class="logo mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -56,18 +56,22 @@
                 <ul>
                     <li class="<?= isset($nav_title) && $nav_title == 'home' ? 'active' : '' ?>"><a href="<?php echo base_url(); ?>">Home</a></li>
                     <!-- <li class="<?= isset($nav_title) && $nav_title == 'about' ? 'active' : '' ?>"><a href="<?= base_url('about-us') ?>">About</a></li> -->
-                    <li class="<?= isset($nav_title) && $nav_title == 'list' ? 'active' : '' ?>"><a href="<?= base_url('list') ?>">List</a></li>
+                    <!--<li class="<?= isset($nav_title) && $nav_title == 'list' ? 'active' : '' ?>"><a href="<?= base_url('list') ?>">List</a></li> -->
+                    <?php if($this->session->userdata('vendor_login')) { ?>
+                        <li class="<?= isset($nav_title) && $nav_title == 'image' ? 'active' : '' ?>"><a href="<?= base_url('vendor-image') ?>">Image</a></li>
+                        <li class="<?= isset($nav_title) && $nav_title == 'xls' ? 'active' : '' ?>"><a href="<?= base_url('xlsx-list') ?>">Xlsx</a></li>
+                    <?php } ?>
                     <li class="<?= isset($nav_title) && $nav_title == 'contact' ? 'active' : '' ?>"><a href="<?= base_url('contact-us') ?>">Contact</a></li>
                 </ul>
             </nav><!-- .nav-menu -->
-            <?php if (!$this->session->userdata('login')) : ?>
+            <?php if (!$this->session->userdata('vendor_login')) : ?>
                 <a href="<?php echo base_url(); ?>users/login" class="get-started-btn">Sign In</a>
                 <!-- <a href="<?php echo base_url(); ?>users/register" class="get-started-btn">Register</a> -->
             <?php endif; ?>
-            <?php if ($this->session->userdata('login')) : ?>
+            <?php if ($this->session->userdata('vendor_login')) : ?>
                 <nav class="nav-menu d-none d-lg-block">
                     <ul>
-                        <li class="drop-down"><a href=""><?= $this->session->username ?></a>
+                        <li class="drop-down"><a href=""><?= $this->session->vendor_username ?></a>
                             <ul>
                                 <li><a href="<?= base_url('users/dashboard') ?>">Dashboard</a></li>
                                 <li><a href="<?= base_url('users/logout') ?>">Logout</a></li>

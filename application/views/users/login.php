@@ -16,11 +16,12 @@
                 <div class="form-group">
                     <label for="username">Username *</label>
                     <input id="username" type="text" class="form-control" name="username" placeholder="Your Username" data-rule="minlen:4" required autocomplete="email" autofocus>
+                    <?= form_error('username') ?>
                 </div>
                 <div class="form-group">
                     <label for="name">Password *</label>
                     <input id="password" type="password" class="form-control " name="password" required autocomplete="new-password" placeholder="Your Password" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject">
-
+                    <?= form_error('password') ?>
                 </div>
 
 

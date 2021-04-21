@@ -19,6 +19,16 @@ $route['posts'] = 'posts/index';
 $route['about-us'] = 'pages/about';
 $route['contact-us'] = 'pages/contact';
 $route['list'] = 'pages/list';
+$route['xlsx-list'] = 'Xls/index';
+$route['upload-xlsx'] = 'Xls/create_xls';
+$route['vendor-image'] = 'VendorImage/index';
+$route['upload-image'] = 'VendorImage/upload_image';
+$route['upload-image/post']['post'] = 'VendorImage/upload_images';
+$route['delete-image/(:num)'] = 'VendorImage/delete_image/$1';
+$route['edit-image/(:num)'] = 'VendorImage/edit_image/$1';
+$route['update-image/(:num)'] = 'VendorImage/update_image/$1';
+$route['replace-csv'] = 'Xls/replace_csv';
+// $route['upload-xlsx-file'] = 'Xls/upload_xls';
 
 
 $route['default_controller'] = 'pages/view';

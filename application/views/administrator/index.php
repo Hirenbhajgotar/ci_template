@@ -21,7 +21,7 @@
                 <div class="login-card card-block auth-body">
 
                     <div class="text-center">
-                        <img src="<?= base_url('assets/frontend/img/LOGO-405x116.png') ?>" alt="logo.png">
+                        <img src="<?= base_url('assets/frontend/img/logo.png') ?>" alt="logo.png">
                     </div>
 
                     <div class="auth-box">

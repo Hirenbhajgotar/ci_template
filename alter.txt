@@ -6,4 +6,16 @@ create table 'admin_type'
 
 ALTER TABLE `users` CHANGE `role_id` `role_id` INT(11) NOT NULL COMMENT '-1=super admin, -2=frontend user, 1=admin';
 
+//19-04-2021 added by hiren
+create db table - vendor_image, xls
 
+#config.php - 
+    $config['composer_autoload'] = 'vendor/autoload.php';
+#autoload.php
+    -load models -> 'Xls_Model', 'VendorImage_Model'
+#routes.php
+    $route['xlsx-list'] = 'Xls/index';
+    $route['upload-xlsx'] = 'Xls/create_xls';
+    $route['vendor-image'] = 'VendorImage/index';
+    $route['upload-image'] = 'VendorImage/upload_image';
+    $route['upload-image/post']['post'] = 'VendorImage/upload_images';
