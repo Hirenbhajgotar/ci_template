@@ -19,3 +19,6 @@ create db table - vendor_image, xls
     $route['vendor-image'] = 'VendorImage/index';
     $route['upload-image'] = 'VendorImage/upload_image';
     $route['upload-image/post']['post'] = 'VendorImage/upload_images';
+
+//22-04-2021 added by hiren
+create db table - xls_notification

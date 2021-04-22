@@ -61,61 +61,143 @@ class VendorImage extends CI_Controller
             if (!is_dir('uploads/images/' . $user_dir_name)) {
                 mkdir('./uploads/images/' . $user_dir_name, 0777, TRUE);
             }
-            $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $file_name_old = basename($_FILES['image']['name'], '.'.$ext);
-            // $file_name = $user_dir_name . $file_name_old . str_replace('.', '', str_replace(' ', '', microtime())) . "-L.".$ext;
-            $file_name = str_replace('.', '', $user_dir_name . $file_name_old . str_replace(' ', '', microtime())) . "-L.".$ext;
-            
-            $config = array(
-                'upload_path'   => "./uploads/images/" . $user_dir_name,
-                'allowed_types' => "jpg|png|jpeg|JPEG|JPG|PNG",
-                'file_name'     => $file_name
-            );
-            
-            $this->load->library('upload', $config);
-            $this->upload->initialize($config);
-            if($this->upload->do_upload('image')) {
-                $this->load->library('image_lib');
-                
-                $thumb_file_1 = $user_dir_name . $file_name_old . str_replace('.', '', str_replace(' ', '', microtime())) . "-S." . $ext;
-                $thumb_file_2 = $user_dir_name . $file_name_old . str_replace('.', '', str_replace(' ', '', microtime())) . "-T." . $ext;
-                // Create thumnail or resize image
-                $thumb_1['image_library']  = 'gd2';
-                $thumb_1['source_image']   = './uploads/images/' . $user_dir_name . '/' . $file_name;
-                $thumb_1['new_image']      = './uploads/images/' . $user_dir_name . '/' . $thumb_file_1;               // path where you want to save thumnail
-                $thumb_1['width']          = 300;
-                $thumb_1['height']         = 300;
-    
-                $thumb_2['image_library']  = 'gd2';
-                $thumb_2['source_image']   = './uploads/images/' . $user_dir_name . '/' . $file_name;
-                $thumb_2['new_image']      = './uploads/images/' . $user_dir_name . '/' . $thumb_file_2;               // path where you want to save thumnail
-                $thumb_2['width']          = 100;
-                $thumb_2['height']         = 100;
-                
-                $this->image_lib->initialize($thumb_1);
-                $library_thumb_1 = $this->image_lib->resize();
-                $this->image_lib->initialize($thumb_2);
-                $library_thumb_2 = $this->image_lib->resize();
-    
-                if(!$library_thumb_1 && !$library_thumb_2) {
-                    $data['error'] = $this->image_lib->display_errors();
-                    $this->session->set_flashdata('msg', $data);
+            $filesCount = count($_FILES['image']['name']);
+            $mainImgFiles = [];
+            for ($i = 0; $i < $filesCount; $i++) {
+                $_FILES['img']['name']     = $_FILES['image']['name'][$i];
+                $_FILES['img']['type']     = $_FILES['image']['type'][$i];
+                $_FILES['img']['tmp_name'] = $_FILES['image']['tmp_name'][$i];
+                $_FILES['img']['error']    = $_FILES['image']['error'][$i];
+                $_FILES['img']['size']     = $_FILES['image']['size'][$i];
+
+                $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+                $file_name_old = basename($_FILES['img']['name'], '.' . $ext);
+                // $file_name = $user_dir_name . $file_name_old . str_replace('.', '', str_replace(' ', '', microtime())) . "-L.".$ext;
+                $file_name = str_replace('.', '', $user_dir_name . $file_name_old . str_replace(' ', '', microtime())) . "-L." . $ext;
+
+                $config = array(
+                    'upload_path'   => "./uploads/images/" . $user_dir_name,
+                    'allowed_types' => "jpg|png|jpeg|JPEG|JPG|PNG",
+                    'file_name'     => $file_name
+                );
+
+                $this->load->library('upload', $config);
+                $this->upload->initialize($config);
+                if ($this->upload->do_upload('img')) {
+                    $this->load->library('image_lib');
+
+                    $thumb_file_1 = $user_dir_name . $file_name_old . str_replace('.', '', str_replace(' ', '', microtime())) . "-S." . $ext;
+                    $thumb_file_2 = $user_dir_name . $file_name_old . str_replace('.', '', str_replace(' ', '', microtime())) . "-T." . $ext;
+                    // Create thumnail or resize image
+                    $thumb_1['image_library']  = 'gd2';
+                    $thumb_1['source_image']   = './uploads/images/' . $user_dir_name . '/' . $file_name;
+                    $thumb_1['new_image']      = './uploads/images/' . $user_dir_name . '/' . $thumb_file_1;               // path where you want to save thumnail
+                    $thumb_1['width']          = 300;
+                    $thumb_1['height']         = 300;
+
+                    $thumb_2['image_library']  = 'gd2';
+                    $thumb_2['source_image']   = './uploads/images/' . $user_dir_name . '/' . $file_name;
+                    $thumb_2['new_image']      = './uploads/images/' . $user_dir_name . '/' . $thumb_file_2;               // path where you want to save thumnail
+                    $thumb_2['width']          = 100;
+                    $thumb_2['height']         = 100;
+
+                    $this->image_lib->initialize($thumb_1);
+                    $library_thumb_1 = $this->image_lib->resize();
+                    $this->image_lib->initialize($thumb_2);
+                    $library_thumb_2 = $this->image_lib->resize();
+
+                    if (!$library_thumb_1 && !$library_thumb_2) {
+                        $data['error'] = $this->image_lib->display_errors();
+                        $this->session->set_flashdata('msg', $data);
+                        $this->session->set_flashdata('type', 'danger');
+                        redirect('upload-image');
+                    } else {
+                        $imageArray = [
+                            'main_image' => $file_name, 
+                            'small_image' => $thumb_file_1, 
+                            'thumb_image' => $thumb_file_2,
+                            'created_at'  => date('Y-m-d h:i:s'),
+                            'updated_at'  => date('Y-m-d h:i:s'),
+                            'vendor_id'   => $this->session->vendor_user_id,
+                        ];
+                        $mainImgFiles[] = $imageArray;
+                        // $this->VendorImage_Model->upload_images($imageArray);
+                        // $this->session->set_flashdata('msg', 'Image Uploaded Successfully');
+                        // $this->session->set_flashdata('type', 'success');
+                        // redirect('upload-image');
+                    }
+                } else {
+                    $this->session->set_flashdata('msg', $this->upload->display_errors());
                     $this->session->set_flashdata('type', 'danger');
                     redirect('upload-image');
-                } else {
-                    $imageArray = [
-                        'main_image' => $file_name, 'small_image' => $thumb_file_1, 'thumb_image' => $thumb_file_2
-                    ];
-                    $this->VendorImage_Model->upload_images($imageArray);
-                    $this->session->set_flashdata('msg', 'Image Uploaded Successfully');
-                    $this->session->set_flashdata('type', 'success');
-                    redirect('upload-image');
                 }
-            } else {
-                $this->session->set_flashdata('msg', $this->upload->display_errors());
-                $this->session->set_flashdata('type', 'danger');
-                redirect('upload-image');
             }
+            // echo '<pre>';
+            // print_r($mainImgFiles);
+            // echo '</pre>';
+            // exit;
+            // exit;
+            if(count($mainImgFiles) > 0) {
+                $this->VendorImage_Model->upload_batch_images($mainImgFiles);
+                 $this->session->set_flashdata('msg', 'Image Uploaded Successfully');
+                $this->session->set_flashdata('type', 'success');
+                redirect('vendor-image');
+            }
+            // $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+            // $file_name_old = basename($_FILES['img']['name'], '.'.$ext);
+            // // $file_name = $user_dir_name . $file_name_old . str_replace('.', '', str_replace(' ', '', microtime())) . "-L.".$ext;
+            // $file_name = str_replace('.', '', $user_dir_name . $file_name_old . str_replace(' ', '', microtime())) . "-L.".$ext;
+            
+            // $config = array(
+            //     'upload_path'   => "./uploads/images/" . $user_dir_name,
+            //     'allowed_types' => "jpg|png|jpeg|JPEG|JPG|PNG",
+            //     'file_name'     => $file_name
+            // );
+            
+            // $this->load->library('upload', $config);
+            // $this->upload->initialize($config);
+            // if($this->upload->do_upload('image')) {
+            //     $this->load->library('image_lib');
+                
+            //     $thumb_file_1 = $user_dir_name . $file_name_old . str_replace('.', '', str_replace(' ', '', microtime())) . "-S." . $ext;
+            //     $thumb_file_2 = $user_dir_name . $file_name_old . str_replace('.', '', str_replace(' ', '', microtime())) . "-T." . $ext;
+            //     // Create thumnail or resize image
+            //     $thumb_1['image_library']  = 'gd2';
+            //     $thumb_1['source_image']   = './uploads/images/' . $user_dir_name . '/' . $file_name;
+            //     $thumb_1['new_image']      = './uploads/images/' . $user_dir_name . '/' . $thumb_file_1;               // path where you want to save thumnail
+            //     $thumb_1['width']          = 300;
+            //     $thumb_1['height']         = 300;
+    
+            //     $thumb_2['image_library']  = 'gd2';
+            //     $thumb_2['source_image']   = './uploads/images/' . $user_dir_name . '/' . $file_name;
+            //     $thumb_2['new_image']      = './uploads/images/' . $user_dir_name . '/' . $thumb_file_2;               // path where you want to save thumnail
+            //     $thumb_2['width']          = 100;
+            //     $thumb_2['height']         = 100;
+                
+            //     $this->image_lib->initialize($thumb_1);
+            //     $library_thumb_1 = $this->image_lib->resize();
+            //     $this->image_lib->initialize($thumb_2);
+            //     $library_thumb_2 = $this->image_lib->resize();
+    
+            //     if(!$library_thumb_1 && !$library_thumb_2) {
+            //         $data['error'] = $this->image_lib->display_errors();
+            //         $this->session->set_flashdata('msg', $data);
+            //         $this->session->set_flashdata('type', 'danger');
+            //         redirect('upload-image');
+            //     } else {
+            //         $imageArray = [
+            //             'main_image' => $file_name, 'small_image' => $thumb_file_1, 'thumb_image' => $thumb_file_2
+            //         ];
+            //         $this->VendorImage_Model->upload_images($imageArray);
+            //         $this->session->set_flashdata('msg', 'Image Uploaded Successfully');
+            //         $this->session->set_flashdata('type', 'success');
+            //         redirect('upload-image');
+            //     }
+            // } else {
+            //     $this->session->set_flashdata('msg', $this->upload->display_errors());
+            //     $this->session->set_flashdata('type', 'danger');
+            //     redirect('upload-image');
+            // }
         }
     }
 

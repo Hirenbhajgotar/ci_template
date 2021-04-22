@@ -19,6 +19,11 @@ class Xls_Model extends CI_Model
         return $this->db->insert($this->table, $data);
     }
 
+    public function batch_insert($data)
+    {
+        return $this->db->insert_batch($this->table, $data);
+    }
+
     public function get_xls($limit, $start)
     {
         $this->db->order_by('id', 'desc');

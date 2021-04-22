@@ -66,7 +66,7 @@ class Administrator_Model extends CI_Model
 	public function add_user($post_image, $password)
 	{
 		$data = array(
-			'role_id'          => $this->input->post('role_id'),
+			'role_id'        => $this->input->post('role_id'),
 			'name'          => $this->input->post('name'),
 			'email'         => $this->input->post('email'),
 			'password'      => md5($this->input->post('password')),
@@ -166,14 +166,14 @@ class Administrator_Model extends CI_Model
 	public function update_user_data($post_image)
 	{
 		$data = array(
-			'name' => $this->input->post('name'),
-			'zipcode' => $this->input->post('zipcode'),
-			'contact' => $this->input->post('contact'),
-			'address' => $this->input->post('address'),
-			'gender' => $this->input->post('gender'),
-			'status' => $this->input->post('status'),
-			'dob' => $this->input->post('dob'),
-			'image' => $post_image,
+			'name'          => $this->input->post('name'),
+			'zipcode'       => $this->input->post('zipcode'),
+			'contact'       => $this->input->post('contact'),
+			'address'       => $this->input->post('address'),
+			'gender'        => $this->input->post('gender'),
+			'status'        => $this->input->post('status'),
+			'dob'           => $this->input->post('dob'),
+			'image'         => $post_image,
 			'register_date' => date("Y-m-d H:i:s")
 		);
 

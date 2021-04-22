@@ -41,7 +41,6 @@
                                                     <?php
                                                     if ($item->main_image && file_exists(VENDOR_IMAGE . $this->session->vendor_username . '/' . $item->main_image)) { ?>
                                                         <img src="<?= base_url(VENDOR_IMAGE . $this->session->vendor_username . '/' . $item->thumb_image) ?>" alt="">
-                                                        <!-- <img src="<?= base_url('assets/frontend/img/general/404 Error-rafiki.svg') ?>" alt=""> -->
                                                     <?php } else { ?>
                                                         <img src="<?= base_url('assets/frontend/img/general/404 Error-rafiki.svg') ?>" alt="">
                                                     <?php }

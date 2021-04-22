@@ -78,7 +78,9 @@
         padding-left: 0 !important;
         background-color: transparent;
     }
-
+    .contact .php-email-form .validate {
+        display: block !important;
+    }
     @media (min-width: 768px) {
         .main-content .container-fluid {
             padding-right: 39px !important;
@@ -154,18 +156,7 @@
                         <div class="row">
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center mt-md-5">
-                                    <!-- <div>
-                                        <span class="heading">22</span>
-                                        <span class="description">Friends</span>
-                                    </div>
-                                    <div>
-                                        <span class="heading">10</span>
-                                        <span class="description">Photos</span>
-                                    </div>
-                                    <div>
-                                        <span class="heading">89</span>
-                                        <span class="description">Comments</span>
-                                    </div> -->
+                                    
                                 </div>
                             </div>
                         </div>
@@ -175,15 +166,7 @@
                             <div class=' font-weight-300' style="margin-top: 20px;">
                                 195, Abdul Sattar Bldg, Opp Grant Rly Station, Grant Road, Mumbai, Maharashtra.
                             </div>
-                            <!-- <div class="h5 font-weight-300">
-                                <i class="ni location_pin mr-2"></i>Bucharest, Romania
-                            </div>
-                            <div class="h5 mt-4">
-                                <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
-                            </div>
-                            <div>
-                                <i class="ni education_hat mr-2"></i>University of Computer Science
-                            </div> -->
+                            
                             <hr class="my-4">
                             Welcome to <?= APP_NAME ?>, your number one source for all things [product, ie: shoes, bags, dog treats]. We're dedicated to giving you the very best of [product], with a focus on [three characteristics, ie: dependability, customer service and uniqueness.]
                             Founded in [year] by [founder's name], [store name] has come a long way from its beginnings in a [starting location, ie: home office, toolshed, Houston, TX.]. When [store founder] first started out, his/her passion for [passion of founder, ie: helping other parents be more eco-friendly, providing the best equipment for his fellow musicians] drove him to [action, ie: do intense research, quit her day job], and gave him the impetus to turn hard work and inspiration into to a booming online store. We now serve customers all over [place, ie: the US, the world, the Austin area], and are thrilled to be a part of the [adjective, ie: quirky, eco-friendly, fair trade] wing of the [industry type, ie: fashion, baked goods, watches] industry.
@@ -193,43 +176,43 @@
             </div>
             <div class="col-xl-8 order-xl-1">
                 <div class="contact">
-                    <?php echo form_open_multipart('', ['class' => 'php-email-form', 'style' => 'box-shadow: none']); ?>
-                    <input type="hidden" name="role" value="-1">
+                    <?php $this->view('component/flash_msg') ?>
+                    <?php echo form_open_multipart('users/update-profile', ['class' => 'php-email-form', 'style' => 'box-shadow: none']); ?>
                     <div class="form-group">
-                        <label for="name">Name *</label>
-                        <input id="name" type="text" class="form-control" value="<?= isset($user->name) && $user->name ? $user->name : '' ?>" name="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" required autocomplete="name" autofocus>
+                        <label for="name">First Name *</label>
+                        <input id="name" type="text" class="form-control" value="<?= isset($user->firstname) && $user->firstname ? $user->firstname : set_value('firstname') ?>" name="firstname" placeholder="Your First Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" required autocomplete="firstname" autofocus>
 
-                        <div class="validate"></div>
+                        <div class="validate"><?= form_error('firstname') ?></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Last Name</label>
+                        <input id="name" type="text" class="form-control" value="<?= isset($user->lastname) && $user->lastname ? $user->lastname : set_value('lastname') ?>" name="lastname" placeholder="Your Last Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" autocomplete="lastname" autofocus>
+
+                        <div class="validate"><?= form_error('lastname') ?></div>
                     </div>
                     <div class="form-group">
                         <label for="name">username *</label>
-                        <input id="username" type="text" class="form-control " value="<?= isset($user->username) && $user->username ? $user->username : '' ?>" name="username" placeholder="Your Username" data-rule="minlen:4" data-msg="Please enter at least 4 chars" required autocomplete="username" autofocus>
+                        <input id="username" type="text" class="form-control " value="<?= isset($user->username) && $user->username ? $user->username : set_value('username') ?>" name="username" placeholder="Your Username" data-rule="minlen:4" data-msg="Please enter at least 4 chars"  autocomplete="username" autofocus>
 
-                        <div class="validate"></div>
+                        <div class="validate"><?= form_error('username') ?></div>
                     </div>
                     <div class="form-group">
                         <label for="name">Email *</label>
-                        <input id="email" type="email" class="form-control" value="<?= isset($user->email) && $user->email ? $user->email : '' ?>" name="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" required autocomplete="email">
-                        <div class="validate"></div>
+                        <input id="email" type="email" class="form-control" value="<?= isset($user->email) && $user->email ? $user->email : set_value('email') ?>" name="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" required autocomplete="email">
+                        <div class="validate"><?= form_error('email') ?></div>
                     </div>
 
                     <div class="form-group">
                         <label for="name">Password *</label>
-                        <input id="password" type="password" class="form-control" name="password" required autocomplete="new-password" placeholder="Your Password" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject">
-                        <div class="validate"></div>
+                        <input id="password" type="password" class="form-control" name="password" autocomplete="new-password" placeholder="Your Password" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject">
+                        <?php echo form_error('password', '<div class="validate">', '</div>') ?>
                     </div>
                     <div class="form-group">
                         <label for="password2">Confirm Password *</label>
-                        <input id="password2" type="password" class="form-control " name="password2" required placeholder="Confirmm Your Password" data-rule="minlen:4" data-msg="Please Confirm your password">
-                        <div class="validate"></div>
+                        <input id="password2" type="password" class="form-control " name="password2" placeholder="Confirmm Your Password" data-rule="minlen:4" data-msg="Please Confirm your password">
+                        <div class="validate"><?= form_error('password2') ?></div>
                     </div>
-                    <div class="form-group">
-                        <label for="zipcode">Zipcode</label>
-                        <input id="zipcode" type="text" class="form-control " value="<?= isset($user->zipcode) && $user->zipcode ? $user->zipcode : '' ?>" name="zipcode" placeholder="Your Zipcode" data-rule="minlen:4" data-msg="Please enter at least 4 chars" required autocomplete="zipcode" autofocus>
-
-                        <div class="validate"></div>
-                    </div>
-                    <div><button type="submit">Register</button></div>
+                    <div><button type="submit">Update</button></div>
                     <?php echo form_close() ?>
                 </div>
             </div>

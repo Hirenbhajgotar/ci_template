@@ -11,17 +11,17 @@
                 <img src="<?= base_url() ?>assets/frontend/img/general/Login-cuate.svg" class="img-fluid" alt="">
             </div>
             <div class="col-lg-6">
-                <?php echo validation_errors(); ?>
+                <?php $this->view('component/flash_msg') ?>
                 <?php echo form_open('users/login', ['class' => 'php-email-form']); ?>
                 <div class="form-group">
                     <label for="username">Username *</label>
-                    <input id="username" type="text" class="form-control" name="username" placeholder="Your Username" data-rule="minlen:4" required autocomplete="email" autofocus>
-                    <?= form_error('username') ?>
+                    <input id="username" type="text" class="form-control" name="username" placeholder="Your Username" data-rule="minlen:4" autocomplete="email" autofocus>
+                    <div class="validate"> <?php echo form_error('username') ?></div>
                 </div>
                 <div class="form-group">
                     <label for="name">Password *</label>
-                    <input id="password" type="password" class="form-control " name="password" required autocomplete="new-password" placeholder="Your Password" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject">
-                    <?= form_error('password') ?>
+                    <input id="password" type="password" class="form-control " name="password" autocomplete="new-password" placeholder="Your Password" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject">
+                    <div class="validate"><?php echo form_error('password') ?></div>
                 </div>
 
 

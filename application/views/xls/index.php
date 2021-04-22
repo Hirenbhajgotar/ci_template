@@ -32,8 +32,9 @@
                                 <tbody>
                                     <?php
                                     if ($xls_list) {
-                                        $count = 1;
-                                        foreach ($xls_list as $item) { ?>
+                                        $count = isset($_GET['per_page']) && $_GET['per_page'] ? $_GET['per_page'] : 0;
+                                        foreach ($xls_list as $item) {
+                                            $count++; ?>
                                             <tr>
                                                 <?php $vendor = $this->User_Model->get_user($item->vendor_id); ?>
                                                 <th scope="row"><?= $count ?></th>
@@ -41,7 +42,7 @@
                                                 <td><?= $vendor->username ?></td>
                                                 <td><?= date('d-m-Y h:i', strtotime($item->created_at)) ?></td>
                                             </tr>
-                                        <?php $count++;
+                                        <?php 
                                         }
                                     } else { ?>
                                         <tr>

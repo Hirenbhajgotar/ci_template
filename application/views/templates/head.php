@@ -32,7 +32,15 @@
 
     <!-- Template Main CSS File -->
     <link href="<?php echo base_url(); ?>assets/frontend/css/style.css" rel="stylesheet">
-
+    <style>
+        form .validate {
+            display: block !important;
+            color: red;
+            margin: 0 0 15px 0;
+            font-weight: 400;
+            font-size: 13px;
+        }
+    </style>
     <!-- =======================================================
   * Template Name: Mentor - v2.2.1
   * Template URL: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/
@@ -57,30 +65,26 @@
                     <li class="<?= isset($nav_title) && $nav_title == 'home' ? 'active' : '' ?>"><a href="<?php echo base_url(); ?>">Home</a></li>
                     <!-- <li class="<?= isset($nav_title) && $nav_title == 'about' ? 'active' : '' ?>"><a href="<?= base_url('about-us') ?>">About</a></li> -->
                     <!--<li class="<?= isset($nav_title) && $nav_title == 'list' ? 'active' : '' ?>"><a href="<?= base_url('list') ?>">List</a></li> -->
-                    <?php if($this->session->userdata('vendor_login')) { ?>
+                    <?php if ($this->session->userdata('vendor_login')) { ?>
                         <li class="<?= isset($nav_title) && $nav_title == 'image' ? 'active' : '' ?>"><a href="<?= base_url('vendor-image') ?>">Image</a></li>
                         <li class="<?= isset($nav_title) && $nav_title == 'xls' ? 'active' : '' ?>"><a href="<?= base_url('xlsx-list') ?>">Xlsx</a></li>
                     <?php } ?>
                     <li class="<?= isset($nav_title) && $nav_title == 'contact' ? 'active' : '' ?>"><a href="<?= base_url('contact-us') ?>">Contact</a></li>
+                    <?php if ($this->session->userdata('vendor_login')) : ?>
+                        
+                            <li class="drop-down"><a href=""><?= $this->session->vendor_username ?></a>
+                                <ul>
+                                    <li><a href="<?= base_url('users/dashboard') ?>">Dashboard</a></li>
+                                    <li><a href="<?= base_url('users/logout') ?>">Logout</a></li>
+
+                                </ul>
+                            </li>
+                    <?php endif; ?>
                 </ul>
             </nav><!-- .nav-menu -->
             <?php if (!$this->session->userdata('vendor_login')) : ?>
                 <a href="<?php echo base_url(); ?>users/login" class="get-started-btn">Sign In</a>
                 <!-- <a href="<?php echo base_url(); ?>users/register" class="get-started-btn">Register</a> -->
             <?php endif; ?>
-            <?php if ($this->session->userdata('vendor_login')) : ?>
-                <nav class="nav-menu d-none d-lg-block">
-                    <ul>
-                        <li class="drop-down"><a href=""><?= $this->session->vendor_username ?></a>
-                            <ul>
-                                <li><a href="<?= base_url('users/dashboard') ?>">Dashboard</a></li>
-                                <li><a href="<?= base_url('users/logout') ?>">Logout</a></li>
-
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
-            <?php endif; ?>
-
         </div>
     </header><!-- End Header -->

@@ -27,7 +27,7 @@
                     <div class="form-row">
                         <div class="col-md-6 form-group">
                             <div class="custom-file">
-                                <input type="file" name="xls_file" class="custom-file-input" id="customFile">
+                                <input type="file" name="xls_file[]" class="custom-file-input" id="customFile" >
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
                         </div>

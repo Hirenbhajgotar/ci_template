@@ -1,11 +1,11 @@
 <?php
+set_time_limit(20000);
 require FCPATH . '/vendor/autoload.php';
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// use PhpOffice\PhpSpreadsheet\Spreadsheet;
+// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
-class Xls extends CI_Controller 
+class Xls extends MY_Controller 
 {
     public function index()
     {
@@ -68,7 +68,6 @@ class Xls extends CI_Controller
             $this->session->set_flashdata('type', 'danger');
             redirect('upload-xlsx');
         } else {
-           
             $user_dir_name = $this->session->vendor_username;
             $time_dir_name = str_replace('.', '', str_replace(' ', '', microtime()));
 
@@ -78,28 +77,58 @@ class Xls extends CI_Controller
             if (!is_dir('uploads/' . $user_dir_name . '/' . $time_dir_name)) {
                 mkdir('./uploads/' . $user_dir_name . '/' . $time_dir_name, 0777, TRUE);
             }
+            $filesCount = count($_FILES['xls_file']['name']);
+            $path = './uploads/' . $user_dir_name . '/' . $time_dir_name . '/';
+            // Read the Excel file.
+            $reader = IOFactory::createReader("Xlsx");
+            $mainXlsFiles = [];
+            for ($i = 0; $i < $filesCount; $i++) {
+                $xlsFiles = [];
+                $_FILES['exl_file']['name']     = $_FILES['xls_file']['name'][$i];
+                $_FILES['exl_file']['type']     = $_FILES['xls_file']['type'][$i];
+                $_FILES['exl_file']['tmp_name'] = $_FILES['xls_file']['tmp_name'][$i];
+                $_FILES['exl_file']['error']    = $_FILES['xls_file']['error'][$i];
+                $_FILES['exl_file']['size']     = $_FILES['xls_file']['size'][$i];
+                
+                $config['upload_path'] = './uploads/' . $user_dir_name . '/' . $time_dir_name;
+                $config['allowed_types'] = 'xls|xlsx';
+                $this->load->library('upload', $config);
+                $this->upload->initialize($config);
+                if ($this->upload->do_upload('exl_file')) {
+                    
+                    $xlsFiles['file_name']  = $this->upload->data('file_name');
+                    $xlsFiles['path']       = $path;
+                    $xlsFiles['vendor_id']  = $this->session->vendor_user_id;
+                    $xlsFiles['created_at'] = date('Y-m-d h:i:s');
+                    $xlsFiles['updated_at'] = date('Y-m-d h:i:s');
 
-            $config['upload_path'] = './uploads/' . $user_dir_name . '/' . $time_dir_name;
-            $config['allowed_types'] = 'xls|xlsx';
-            $this->load->library('upload', $config);
-            $this->upload->initialize($config);
-            if ($this->upload->do_upload('xls_file')) {
-                $path = './uploads/' . $user_dir_name . '/' . $time_dir_name . '/';
-                // Read the Excel file.
-                $reader = IOFactory::createReader("Xlsx");
-                // $reader = new Xlsx();
-                $spreadsheet = $reader->load($path . $this->upload->data('file_name'));
-                // Export to CSV file.
-                $loadedSheetNames = $spreadsheet->getSheetNames();
-
-                $writer = IOFactory::createWriter($spreadsheet, "Csv");
-                foreach ($loadedSheetNames as $sheetIndex => $loadedSheetName) {
-                    $writer->setSheetIndex($sheetIndex);
-                    $writer->save($path . $this->upload->data('raw_name') . '_' . $loadedSheetName . '.csv');
+                    $mainXlsFiles[] = $xlsFiles;
+                    
+                    // $reader = new Xlsx();
+                    $spreadsheet = $reader->load($path . $this->upload->data('file_name'));
+                    // Export to CSV file.
+                    $loadedSheetNames = $spreadsheet->getSheetNames();
+        
+                    $writer = IOFactory::createWriter($spreadsheet, "Csv");
+                    foreach ($loadedSheetNames as $sheetIndex => $loadedSheetName) {
+                        $writer->setSheetIndex($sheetIndex);
+                        $writer->save($path . $this->upload->data('raw_name') . '_' . $loadedSheetName . '.csv');
+                    }
+                } else {
+                    $this->session->set_flashdata('msg', $this->upload->display_errors());
+                    $this->session->set_flashdata('type', 'danger');
+                    redirect('upload-xlsx');
                 }
+                
+            }
+            // insert data inro database
+            if(count($mainXlsFiles) > 0) {
                 $this->replace_csv($path); // replace special charector
-                $is_xls = $this->Xls_Model->create_xls($this->upload->data('file_name'), $path);
+                $is_xls = $this->Xls_Model->batch_insert($mainXlsFiles);
+                // $is_xls = $this->Xls_Model->create_xls($this->upload->data('file_name'), $path);
                 if($is_xls) {
+                    $xls_notification_msg = '<b>' . $this->session->vendor_username . '</b> Upload '. $filesCount. ' Xlsx file';
+                    $this->set_xls_notification($xls_notification_msg);
                     $this->session->set_flashdata('msg', 'Xlsx file uploaded successfully');
                     $this->session->set_flashdata('type', 'success');
                     redirect('upload-xlsx');
@@ -108,10 +137,6 @@ class Xls extends CI_Controller
                     $this->session->set_flashdata('type', 'danger');
                     redirect('upload-xlsx');
                 }
-            } else {
-                $this->session->set_flashdata('msg', $this->upload->display_errors());
-                $this->session->set_flashdata('type', 'danger');
-                redirect('upload-xlsx');
             }
         }
     }

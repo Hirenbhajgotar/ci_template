@@ -372,12 +372,11 @@ class Administrator extends CI_Controller
 			$this->load->view('administrator/footer');
 		} else {
 			//Upload Image
-
-			$config['upload_path'] = './assets/images/users';
+			$config['upload_path']   = './assets/images/users';
 			$config['allowed_types'] = 'gif|jpg|png|jpeg';
-			$config['max_size'] = '2048';
-			$config['max_width'] = '2000';
-			$config['max_height'] = '2000';
+			$config['max_size']      = '2048';
+			$config['max_width']     = '2000';
+			$config['max_height']    = '2000';
 
 			$this->load->library('upload', $config);
 

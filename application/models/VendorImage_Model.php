@@ -20,11 +20,18 @@ class VendorImage_Model extends CI_Model
         return $this->db->insert($this->table, $data);
     }
 
+    public function upload_batch_images($imageArray)
+    {
+        return $this->db->insert_batch($this->table, $imageArray);
+    }
+
     public function get_images($limit, $start)
     {
+        $this->db->where('vendor_id', $this->session->vendor_user_id);
         $this->db->order_by('id', 'desc');
         $this->db->limit($limit, $start);
         $query = $this->db->get($this->table);
+        
         return $query->result();
     }
 
@@ -62,4 +69,6 @@ class VendorImage_Model extends CI_Model
             return false;
         }
     }
+
+
 }
